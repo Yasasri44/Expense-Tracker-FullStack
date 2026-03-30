@@ -27,7 +27,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://expense-tracker-full-stack-six.vercel.app")
 @RestController
 @RequestMapping("/mywallet/auth")
 public class SignInController {
@@ -62,3 +62,4 @@ public class SignInController {
                 .build());
     }
 }
+

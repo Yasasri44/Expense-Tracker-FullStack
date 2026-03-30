@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://expense-tracker-full-stack-six.vercel.app")
 @RestController
 @RequestMapping("/mywallet/user")
 public class UserController {
@@ -79,3 +79,4 @@ public class UserController {
         return userService.deleteProfileImg(email);
     }
 }
+

@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://expense-tracker-full-stack-six.vercel.app")
 @RequestMapping("/mywallet/auth/forgotPassword")
 public class ForgotPasswordController {
 
@@ -44,3 +44,4 @@ public class ForgotPasswordController {
         return authService.verifyEmailAndSendForgotPasswordVerificationEmail(email);
     }
 }
+
