@@ -63,9 +63,11 @@ function SavedTransactions() {
     }, [])
 
     useEffect(() => {
-        location.state && toast.success(location.state.text)
-        location.state = null
-    }, [])
+        if (location.state) {
+            toast.success(location.state.text)
+            location.state = null
+        }
+    }, [location])
 
     return (
         <Container activeNavId={11}>

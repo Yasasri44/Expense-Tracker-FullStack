@@ -19,23 +19,27 @@ function AdminUsersManagement() {
         onNextClick, onPrevClick, setNoOfPages, setNoOfRecords, setSearchKey, getPageInfo
     } = usePagination()
 
-    const getUsers = async () => {
-        await AdminService.getAllUsers(pageNumber, pageSize, searchKey).then(
-            (response) => {
-                if (response.data.status === 'SUCCESS') {
-                    setData(response.data.response.data)
-                    setNoOfPages(response.data.response.totalNoOfPages)
-                    setNoOfRecords(response.data.response.totalNoOfRecords)
-                    return
+    useEffect(() => {
+        const fetchUsers = async () => {
+            await AdminService.getAllUsers(pageNumber, pageSize, searchKey).then(
+                (response) => {
+                    if (response.data.status === 'SUCCESS') {
+                        setData(response.data.response.data)
+                        setNoOfPages(response.data.response.totalNoOfPages)
+                        setNoOfRecords(response.data.response.totalNoOfRecords)
+                        return
+                    }
+                    toast.error("Failed to fetch all users: Try again later!")
+                },
+                (error) => {
+                    toast.error("Failed to fetch all users: Try again later!")
                 }
-                toast.error("Failed to fetch all users: Try again later!")
-            },
-            (error) => {
-                toast.error("Failed to fetch all users: Try again later!")
-            }
-        )
-        setIsFetching(false)
-    }
+            )
+            setIsFetching(false)
+        }
+
+        fetchUsers()
+    }, [searchKey, pageNumber, pageSize, setNoOfPages, setNoOfRecords])
 
     const disableOrEnable = async (userId) => {
         await AdminService.disableOrEnableUser(userId).then(
@@ -51,10 +55,6 @@ function AdminUsersManagement() {
             }
         )
     }
-
-    useEffect(() => {
-        getUsers();
-    }, [searchKey, pageNumber])
 
     return (
         <Container activeNavId={5}>

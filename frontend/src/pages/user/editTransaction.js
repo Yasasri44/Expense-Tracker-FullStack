@@ -29,25 +29,22 @@ function EditTransaction() {
     }, [categories, activeTransactionType])
 
 
-    // to be edited transaction fetch
-    async function getTransaction() {
-        await UserService.get_single_transaction(transactionId).then(
-            (response) => {
-                if (response.data.status === "SUCCESS") {
-                    setData(response.data.response)
-                }
-            },
-            (error) => {
-                error.response ?
-                    toast.error(error.response.data.response)
-                    :
-                    toast.error("Failed to fetch transaction information: Try again later!")
-            }
-        )
-
-    }
-
     useEffect(() => {
+        const getTransaction = async () => {
+            await UserService.get_single_transaction(transactionId).then(
+                (response) => {
+                    if (response.data.status === "SUCCESS") {
+                        setData(response.data.response)
+                    }
+                },
+                (error) => {
+                    error.response ?
+                        toast.error(error.response.data.response)
+                        :
+                        toast.error("Failed to fetch transaction information: Try again later!")
+                }
+            )
+        }
         getTransaction()
     }, [transactionId])
 

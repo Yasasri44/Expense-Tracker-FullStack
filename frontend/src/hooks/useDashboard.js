@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import useCategories from "./useCategories";
 import UserService from "../services/userService";
 import AuthService from "../services/auth.service";
@@ -15,9 +15,9 @@ function useDashboard(currentMonth) {
     const [isError, setIsError] = useState(false);
 
 
-    const generateTransactionSummary = async () => {
+    const generateTransactionSummary = useCallback(async () => {
         setIsLoading(true)
-        const income_response = await UserService.getTotalIncomeOrExpense(AuthService.getCurrentUser().id, 2, currentMonth.id, currentMonth.year).then(
+        await UserService.getTotalIncomeOrExpense(AuthService.getCurrentUser().id, 2, currentMonth.id, currentMonth.year).then(
             (response) => {
                 if (response.data.status === "SUCCESS") {
                     setIncome(Number((response.data.response) ? response.data.response.toFixed(2) : 0))
@@ -28,7 +28,7 @@ function useDashboard(currentMonth) {
             }
         )
 
-        const expense_response = await UserService.getTotalIncomeOrExpense(AuthService.getCurrentUser().id, 1, currentMonth.id, currentMonth.year).then(
+        await UserService.getTotalIncomeOrExpense(AuthService.getCurrentUser().id, 1, currentMonth.id, currentMonth.year).then(
             (response) => {
                 if (response.data.status === "SUCCESS") {
                     setExpense(Number((response.data.response) ? response.data.response.toFixed(2) : 0))
@@ -39,7 +39,7 @@ function useDashboard(currentMonth) {
             }
         )
 
-        const no_response = await UserService.getTotalNoOfTransactions(AuthService.getCurrentUser().id, currentMonth.id, currentMonth.year).then(
+        await UserService.getTotalNoOfTransactions(AuthService.getCurrentUser().id, currentMonth.id, currentMonth.year).then(
             (response) => {
                 if (response.data.status === "SUCCESS") {
                     setTransactions(response.data.response)
@@ -51,9 +51,9 @@ function useDashboard(currentMonth) {
         )
         setIsLoading(false)
 
-    }
+    }, [currentMonth.id, currentMonth.year])
 
-    const generateCategorySummary = async () => {
+    const generateCategorySummary = useCallback(async () => {
         setIsLoading(true)
         const filtered = [];
         await Promise.all(categories.filter(cat => cat.transactionType.transactionTypeId === 1).map(async (cat) => {
@@ -68,11 +68,11 @@ function useDashboard(currentMonth) {
         }));
         setCategorySummary(filtered)
         setIsLoading(false)
-    }
+    }, [categories, currentMonth.id, currentMonth.year])
 
-    const fetchBudget = async () => {
+    const fetchBudget = useCallback(async () => {
         setIsLoading(true)
-        const response = await UserService.getBudget(currentMonth.id, currentMonth.year)
+        await UserService.getBudget(currentMonth.id, currentMonth.year)
             .then((response) => {
                 setBudgetAmount(response.data.response)
             })
@@ -80,11 +80,11 @@ function useDashboard(currentMonth) {
                 setIsError(true)
             })
         setIsLoading(false)
-    }
+    }, [currentMonth.id, currentMonth.year])
 
     const saveBudget = async (d) => {
-        const response = await UserService.createBudget(d.amount)
-            .then((response) => {
+        await UserService.createBudget(d.amount)
+            .then(() => {
             })
             .catch((error) => {
                 setIsError(true)
@@ -98,7 +98,7 @@ function useDashboard(currentMonth) {
             generateCategorySummary()
         }
         fetchBudget()
-    }, [currentMonth, categories])
+    }, [currentMonth, categories, generateTransactionSummary, generateCategorySummary, fetchBudget])
 
     return [
         total_expense,

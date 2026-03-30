@@ -15,14 +15,13 @@ function EditCategory() {
     useEffect(() => {
         const category = JSON.parse(localStorage.getItem('categoryToEdit'));
 
-        if (category.categoryId == categoryId) {
-
+        if (category && Number(category.categoryId) === Number(categoryId)) {
             reset({
                 cname: category.categoryName,
                 type: String(category.transactionType.transactionTypeId)
             })
         } else {
-            toast.error("Faild to fetch category information!")
+            toast.error("Failed to fetch category information!")
         }
         localStorage.removeItem('categoryToEdit')
     }, [reset, categoryId])

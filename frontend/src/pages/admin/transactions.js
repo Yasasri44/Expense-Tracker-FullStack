@@ -21,26 +21,26 @@ function AdminTransactionsManagement() {
     } = usePagination()
 
 
-    const getTransactions = async () => {
-        await AdminService.getAllTransactions(pageNumber, pageSize, searchKey).then(
-            (response) => {
-                if (response.data.status === 'SUCCESS') {
-                    setData(response.data.response.data)
-                    setNoOfPages(response.data.response.totalNoOfPages)
-                    setNoOfRecords(response.data.response.totalNoOfRecords)
-                    return
-                }
-            },
-            (error) => {
-                toast.error("Failed to fetch all transactions: Try again later!")
-            }
-        )
-        setIsFetching(false);
-    }
-
     useEffect(() => {
-        getTransactions();
-    }, [searchKey, pageNumber])
+        const fetchTransactions = async () => {
+            await AdminService.getAllTransactions(pageNumber, pageSize, searchKey).then(
+                (response) => {
+                    if (response.data.status === 'SUCCESS') {
+                        setData(response.data.response.data)
+                        setNoOfPages(response.data.response.totalNoOfPages)
+                        setNoOfRecords(response.data.response.totalNoOfRecords)
+                        return
+                    }
+                },
+                (error) => {
+                    toast.error("Failed to fetch all transactions: Try again later!")
+                }
+            )
+            setIsFetching(false);
+        }
+
+        fetchTransactions();
+    }, [searchKey, pageNumber, pageSize, setNoOfPages, setNoOfRecords])
 
     return (
         <Container activeNavId={4}>

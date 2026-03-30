@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {useForm} from 'react-hook-form';
 import AuthService from '../../../services/auth.service';
@@ -16,7 +16,7 @@ const UserRegistrationVerfication = () => {
 
     const onSubmit = async (data) => {
         setIsLoading(true)        
-        const response = await AuthService.verifyRegistrationVerificationCode(data.code).then(
+        await AuthService.verifyRegistrationVerificationCode(data.code).then(
             (response) => {
                 console.log(response.data);
                 if (response.data.status === "SUCCESS") {
@@ -44,7 +44,7 @@ const UserRegistrationVerfication = () => {
 
     const resendCode = async() =>{
         setIsSending(true)         
-        const response = await AuthService.resendRegistrationVerificationCode(email).then(
+        await AuthService.resendRegistrationVerificationCode(email).then(
             (response) => {
                 console.log(response.data.message);
                 setResponseError("");
